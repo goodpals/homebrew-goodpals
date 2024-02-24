@@ -7,7 +7,7 @@ class Barcoder < Formula
     version "0.0.1"
     sha256 "e40f1210b880b26a90e9fab965790030d4e04f010676ed6c8bec05e9f9e4e4ee"
 
-    depends_on "dart" => :build
+    depends_on "dart-sdk" => :build
 
     def install
         system "dart", "pub", "get"
