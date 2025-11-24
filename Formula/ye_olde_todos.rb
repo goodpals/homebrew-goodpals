@@ -5,7 +5,7 @@ class YeOldeTodos < Formula
   license "AGPL-3.0"
   head "https://github.com/goodpals/ye_olde_todos.git", branch: "main"
   version "0.1.0"
-  sha256 "0019dfc4b32d63c1392aa264aed2253c1e0c2fb09216f8e2cc269bbfb8bb49b5"
+  sha256 "3eeae8529f91c19025336aabba86a6db7bcc8df5e25e7b7f3997d6900ad68eaf"
 
   depends_on "rust" => :build
 
