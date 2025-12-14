@@ -1,0 +1,73 @@
+#!/bin/bash
+
+# Usage: `bin/bump <formula-file> <version>`
+# Example: `bin/bump Formula/ye_olde_todos.rb 1.0.0`
+# Changes the version of the formula, fetches the release, and updates the checksum.
+#
+# Make sure you create the github release first. It won't fail if you use an invalid release.
+
+set -e
+
+# If arg 1 is an empty string
+if [ -z "$1" ]; then
+  echo "Usage: bin/bump <formula-file> <version>"
+  echo "Example: bin/bump Formula/ye_olde_todos.rb 1.0.0"
+  exit 1
+fi
+
+# If arg 1 is not a file
+if [ ! -f "$1" ]; then
+  echo "Error: File '$1' not found"
+  exit 1
+fi
+
+# If arg 2 is an empty string
+if [ -z "$2" ]; then
+  echo "Usage: bin/bump <formula-file> <version>"
+  echo "Example: bin/bump Formula/ye_olde_todos.rb 1.0.0"
+  exit 1
+fi
+
+formula_file=$1
+new_version=$2
+
+url_line=$(grep 'url "' "$formula_file" | head -1)
+version_line=$(grep 'version "' "$formula_file" | head -1)
+sha256_line=$(grep 'sha256 "' "$formula_file" | head -1)
+
+if [ -z "$url_line" ] || [ -z "$version_line" ] || [ -z "$sha256_line" ]; then
+  echo "Error: Could not find url, version, or sha256 in $formula_file"
+  exit 1
+fi
+
+old_version=$(echo "$version_line" | awk -F'"' '{print $2}')
+
+if [ "$old_version" == "$new_version" ]; then
+  echo "Error: Version $new_version already set in $formula_file"
+  exit 1
+fi
+
+
+url_replaced=${url_line//$old_version/$new_version}
+url=$(echo "$url_replaced" | awk -F'"' '{print $2}')
+
+echo "Downloading $url..."
+
+sha=$(curl -sL "$url" | shasum -a 256 | awk '{print $1}')
+
+echo "SHA256: $sha"
+echo "Updating $formula_file..."
+
+# Escape | for sed delimiter, and escape other regex special chars
+url_line_escaped=$(printf '%s\n' "$url_line" | sed "s/[[\\.*^\$()+?{|]/\\\\&/g")
+url_replaced_escaped=$(printf '%s\n' "$url_replaced" | sed "s/[[\\.*^\$()+?{|]/\\\\&/g")
+old_version_escaped=$(printf '%s\n' "$old_version" | sed "s/[[\\.*^\$()+?{|]/\\\\&/g")
+old_sha256=$(echo "$sha256_line" | awk -F'"' '{print $2}')
+old_sha256_escaped=$(printf '%s\n' "$old_sha256" | sed "s/[[\\.*^\$()+?{|]/\\\\&/g")
+
+# Replace stuff
+sed -i '' "s|$url_line_escaped|$url_replaced_escaped|" "$formula_file"
+sed -i '' "s|version \"$old_version_escaped\"|version \"$new_version\"|" "$formula_file"
+sed -i '' "s|sha256 \"$old_sha256_escaped\"|sha256 \"$sha\"|" "$formula_file"
+
+echo -e "\033[1;32m✅ Done - bumped $formula_file to $new_version\033[0m"
