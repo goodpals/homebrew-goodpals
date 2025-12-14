@@ -1,11 +1,11 @@
 class Simcleaner < Formula
   desc "CLI tool for cleaning ios simulator runtimes"
   homepage "https://github.com/goodpals/simcleaner"
-  url "https://github.com/goodpals/simcleaner/archive/refs/tags/v0.1.0.tar.gz"
+  url "https://github.com/goodpals/simcleaner/archive/refs/tags/v0.2.0.tar.gz"
   license "AGPL-3.0"
   head "https://github.com/goodpals/simcleaner.git", branch: "main"
-  version "0.1.0"
-  sha256 "c793eab7018d59005a7679dd1dba8e6cab8660eb3189654909907c84ebf0b46a"
+  version "0.2.0"
+  sha256 "5f55a7c7a72e6fe2c909c86f59f774a47a274d30c23456cce88ccca226f47999"
 
   depends_on "rust" => :build
 
