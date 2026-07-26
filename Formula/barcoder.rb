@@ -5,6 +5,7 @@ class Barcoder < Formula
   sha256 "e40f1210b880b26a90e9fab965790030d4e04f010676ed6c8bec05e9f9e4e4ee"
   license "AGPL-3.0"
   head "https://github.com/goodpals/barcoder.git", branch: "main"
+  version "0.0.1"
 
   depends_on "dart-sdk" => :build
 

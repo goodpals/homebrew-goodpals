@@ -5,6 +5,7 @@ class Simcleaner < Formula
   sha256 "5f55a7c7a72e6fe2c909c86f59f774a47a274d30c23456cce88ccca226f47999"
   license "AGPL-3.0"
   head "https://github.com/goodpals/simcleaner.git", branch: "main"
+  version "0.2.0"
 
   depends_on "rust" => :build
 
